@@ -8,7 +8,7 @@ import messageRoutes from './routes/message.routes.js';
 import userRoutes from './routes/user.routes.js';
 
 const app = express(); // создание экземпляра приложения на основе Express
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4000;
 
 dotenv.config(); // загрузка переменных среды
 
