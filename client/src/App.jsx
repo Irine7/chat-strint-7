@@ -14,6 +14,18 @@ function App() {
 			<Routes>
 				<Route
 					path="/"
+					element={<Home />}
+				/>
+				<Route
+					path="/login"
+					element={<Login />}
+				/>
+				<Route
+					path="/signup"
+					element={<SignUp />}
+				/>
+				{/* <Route
+					path="/"
 					element={authUser ? <Home /> : <Navigate to="/login" />}
 				/>
 				<Route
@@ -23,7 +35,7 @@ function App() {
 				<Route
 					path="/signup"
 					element={authUser ? <Navigate to="/" /> : <SignUp />}
-				/>
+				/> */}
 			</Routes>
 			<Toaster />
 		</div>
