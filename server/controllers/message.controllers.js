@@ -36,6 +36,13 @@ export const sendMessage = async (req, res) => {
 		// Сохранение разговора и сообщения в базу данных
 		await Promise.all([conversation.save(), newMessage.save()]);
 
+
+		const receiverSocketId = getReceiverSocketId(receiverId);
+		if (receiverSocketId) {
+			// io.to используется для отправки сообщений только к конкретному пользователю
+			io.to(receiverSocketId).emit('new-message', newMessage);
+		}
+
 		// Отправление JSON-ответа с данными нового сообщения
 		res.status(201).json(newMessage);
 	} catch (error) {
