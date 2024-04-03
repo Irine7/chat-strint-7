@@ -32,8 +32,6 @@ export const sendMessage = async (req, res) => {
 			conversation.messages.push(newMessage._id);
 		}
 
-		// SOCKET IO HERE
-
 		// Сохранение разговора и сообщения в базу данных
 		await Promise.all([conversation.save(), newMessage.save()]);
 
@@ -60,7 +58,7 @@ export const getMessages = async (req, res) => {
 			participants: { $all: [senderId, userToChatWithId] },
 		}).populate('messages'); // Загрузка сообщений внутри разговора
 
-		//
+		// Проверка наличия существующего разговора
 		if (!conversation) {
 			return res.status(200).json([]);
 		}

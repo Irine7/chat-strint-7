@@ -1,7 +1,8 @@
 import express from 'express';
 import dotenv from 'dotenv'; // библиотека для загрузки переменных среды из файла .env
-import connectToMongoDB from './db/connectToMongoDB.js';
 import cookieParser from 'cookie-parser';
+
+import connectToMongoDB from './db/connectToMongoDB.js';
 import { app, server } from './sockets/socket.js';
 
 import authRoutes from './routes/auth.routes.js';
@@ -17,7 +18,8 @@ app.use(express.json());
 // Регистрирует промежуточное ПО (middleware) для обработки запросов из cookie
 app.use(cookieParser());
 
-app.use('/api/auth', authRoutes); // подключает маршруты аутентификации, которые определены в файле auth.routes.js
+// подключает маршруты аутентификации, которые определены в файле auth.routes.js
+app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/users', userRoutes);
 

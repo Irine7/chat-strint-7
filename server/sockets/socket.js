@@ -22,7 +22,7 @@ const userSocketMap = {}; // хранилище соединений сокет�
 io.on('connection', (socket) => {
 	console.log('New client connected', socket.id);
 	const userId = socket.handshake.query.userId; // извлечение userId из параметров запроса
-	if (userId !== 'undefined') {
+	if (userId != 'undefined') {
 		userSocketMap[userId] = socket.id;
 	}
 	io.emit('getOnlineUsers', Object.keys(userSocketMap)) // отправка всем пользователям сокетов, связанных с текущим пользователем
@@ -33,4 +33,4 @@ io.on('connection', (socket) => {
 	});
 });
 
-export { app, server, io };
+export { app, io, server };

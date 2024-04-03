@@ -2,10 +2,10 @@ import {React, useState} from 'react';
 import { BsSend } from "react-icons/bs";
 import useSendMessage from '../../hooks/useSendMessage';
 
-function MessageInput() {
+const MessageInput = () => {
 	const [message, setMessage] = useState('');
 	const { loading, sendMessage } = useSendMessage();
-	const handleSubmit = async(e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (!message) return; // Если поле ввода пустое, то не отправляем сообщение
 		await sendMessage(message);
