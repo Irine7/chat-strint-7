@@ -1,5 +1,6 @@
 import Conversation from '../models/conversation.model.js';
 import Message from '../models/message.model.js';
+import { getReceiverSocketId, io } from "../sockets/socket.js";
 
 // Экспорт функции sendMessage в качестве обработчика маршрута
 export const sendMessage = async (req, res) => {
@@ -36,7 +37,6 @@ export const sendMessage = async (req, res) => {
 		// Сохранение разговора и сообщения в базу данных
 		await Promise.all([conversation.save(), newMessage.save()]);
 
-
 		const receiverSocketId = getReceiverSocketId(receiverId);
 		if (receiverSocketId) {
 			// io.to используется для отправки сообщений только к конкретному пользователю
@@ -60,14 +60,13 @@ export const getMessages = async (req, res) => {
 			participants: { $all: [senderId, userToChatWithId] },
 		}).populate('messages'); // Загрузка сообщений внутри разговора
 
-		// 
+		//
 		if (!conversation) {
 			return res.status(200).json([]);
 		}
 
 		const messages = conversation.messages;
 		res.status(200).json(messages);
-
 	} catch (error) {
 		console.log('Error in getMessage controller:', error.message);
 		res.status(500).json({ error: 'Internal server error' });

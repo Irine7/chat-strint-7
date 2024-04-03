@@ -1,5 +1,5 @@
 import User from '../models/user.model.js';
-import bcypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import generateTokenAndSetCookie from '../ulils/generateToken.js';
 
 export const signup = async (req, res) => {
@@ -18,8 +18,8 @@ export const signup = async (req, res) => {
 		}
 
 		// Хэш пароля
-		const salt = await bcypt.genSalt(10);
-		const hashedPassword = await bcypt.hash(password, salt);
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(password, salt);
 		// https://avatar-placeholder.iran.liara.run/
 
 		const boyProfilePic =
@@ -58,7 +58,7 @@ export const login = async (req, res) => {
 	try {
 		const { userName, password } = req.body;
 		const user = await User.findOne({ userName }); // Проверяем, есть ли пользователь с таким именем в базе данных
-		const isPasswordCorrect = await bcypt.compare(password, user?.password || '');
+		const isPasswordCorrect = await bcrypt.compare(password, user?.password || '');
 
 		if (!user || !isPasswordCorrect) { // Если пользователь не найден или пароль неверен
 			return res.status(400).json({ error: 'Invalid username or password' });
