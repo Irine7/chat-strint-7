@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import http from 'http';
 import express from 'express';
+import { notStrictEqual } from 'assert';
 
 const app = express(); // создание экземпляра приложения на основе Express
 const server = http.createServer(app); // создание экземпляра HTTP-сервера
@@ -14,7 +15,7 @@ const io = new Server(server, {
 
 export const getReceiverSocketId = (receiverId) => {
 	return userSocketMap[receiverId];
-}
+};
 
 const userSocketMap = {}; // хранилище соединений сокетов для каждого пользователя (userId: socketId)
 
@@ -25,7 +26,21 @@ io.on('connection', (socket) => {
 	if (userId != 'undefined') {
 		userSocketMap[userId] = socket.id;
 	}
-	io.emit('getOnlineUsers', Object.keys(userSocketMap)) // отправка всем пользователям сокетов, связанных с текущим пользователем
+	io.emit('getOnlineUsers', Object.keys(userSocketMap)); // отправка всем пользователям сокетов, связанных с текущим пользователем
+
+	// Обработчик события для получения новых сообщений
+	socket.on('newMessage', (message) => {
+		console.log('New message received', message);
+		const receiverSocketId = getReceiverSocketId(message.receiverId);
+		if (receiverSocketId) {
+				console.log('Receiver found', receiverSocketId);
+				io.to(receiverSocketId).emit('newMessage', message); // Отправляем новое сообщение только конкретному получателю
+		} else {
+				console.log('Receiver not found');
+		}
+});
+
+
 	socket.on('disconnect', () => {
 		console.log('Client disconnected', socket.id);
 		delete userSocketMap[userId];
