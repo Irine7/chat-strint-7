@@ -38,7 +38,7 @@ export const sendMessage = async (req, res) => {
 		const receiverSocketId = getReceiverSocketId(receiverId);
 		if (receiverSocketId) {
 			// io.to используется для отправки сообщений только к конкретному пользователю
-			io.to(receiverSocketId).emit('new-message', newMessage);
+			io.to(receiverSocketId).emit('newMessage', newMessage);
 		}
 
 		// Отправление JSON-ответа с данными нового сообщения

@@ -22,23 +22,26 @@ const userSocketMap = {}; // хранилище соединений сокет�
 // socket.on - обработчик события, который вызывается при подключении нового клиента. Может быть использован на стороне сервера или клиента.
 io.on('connection', (socket) => {
 	console.log('New client connected', socket.id);
+
+	console.log('userId', socket.handshake.query.userId)
 	const userId = socket.handshake.query.userId; // извлечение userId из параметров запроса
+
 	if (userId != 'undefined') {
 		userSocketMap[userId] = socket.id;
 	}
 	io.emit('getOnlineUsers', Object.keys(userSocketMap)); // отправка всем пользователям сокетов, связанных с текущим пользователем
 
 	// Обработчик события для получения новых сообщений
-	socket.on('newMessage', (message) => {
+	socket.on('newMessage', async (message) => {	
 		console.log('New message received', message);
 		const receiverSocketId = getReceiverSocketId(message.receiverId);
 		if (receiverSocketId) {
 				console.log('Receiver found', receiverSocketId);
-				io.to(receiverSocketId).emit('newMessage', message); // Отправляем новое сообщение только конкретному получателю
+				socket.to(receiverSocketId).emit('newMessage', message); // Отправляем новое сообщение только конкретному получателю
 		} else {
 				console.log('Receiver not found');
 		}
-});
+	});
 
 
 	socket.on('disconnect', () => {
